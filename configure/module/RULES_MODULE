@@ -1,0 +1,49 @@
+
+
+.PHONY: deinit init git-submodule-sync $(E3_MODULE_SRC_PATH)  checkout
+
+init: git-submodule-sync $(E3_MODULE_SRC_PATH)  checkout
+
+deinit:
+	$(SUDO) rm -rf $(E3_MODULE_SRC_PATH)
+
+git-submodule-sync:
+	$(QUIET) git submodule sync
+
+
+$(E3_MODULE_SRC_PATH): 
+	$(QUIET) $(git_update)
+
+
+checkout: 
+	cd $(E3_MODULE_SRC_PATH) && git checkout $(EPICS_MODULE_TAG)
+
+
+
+
+.PHONY: build install uninstall clean distclean
+build:
+	$(QUIET)echo "PVACCESS=$(E3_SITEMODS_PATH)/pvAccess/$(PVACCESS_DEP_VERSION)"  > $(TOP)/$(E3_MODULE_SRC_PATH)/configure/RELEASE.local
+	$(QUIET)echo "PVDATA=$(E3_SITEMODS_PATH)/pvData/$(PVDATA_DEP_VERSION)"       >> $(TOP)/$(E3_MODULE_SRC_PATH)/configure/RELEASE.local
+	$(QUIET)echo "EPICS_BASE=$(EPICS_BASE)"                                      >> $(TOP)/$(E3_MODULE_SRC_PATH)/configure/RELEASE.local
+	$(SUDOBASH) "$(MAKE) -C $(E3_MODULE_SRC_PATH)"
+
+install:
+	$(QUIET)echo "Installing pvgetx, pvputx, and eget into $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/"
+	$(QUIET)$(SUDO) install -m 555 $(TOP)/$(E3_MODULE_SRC_PATH)/bin/$(EPICS_HOST_ARCH)/pvgetx  $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/
+	$(QUIET)$(SUDO) install -m 555 $(TOP)/$(E3_MODULE_SRC_PATH)/bin/$(EPICS_HOST_ARCH)/pvputx  $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/	
+	$(QUIET)$(SUDO) install -m 555 $(TOP)/$(E3_MODULE_SRC_PATH)/bin/$(EPICS_HOST_ARCH)/eget    $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/
+
+uninstall:
+	$(QUIET)echo "Removing pvgetx, pvputx, and eget from $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/"
+	$(QUIET)$(SUDO) rm -f  $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/pvgetx
+	$(QUIET)$(SUDO) rm -f  $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/pvputx
+	$(QUIET)$(SUDO) rm -f  $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/eget
+
+clean:
+	$(SUDOBASH) "$(MAKE) -C $(E3_MODULE_SRC_PATH) clean" 
+
+distclean:
+	$(SUDOBASH) "$(MAKE) -C $(E3_MODULE_SRC_PATH) distclean"
+
+

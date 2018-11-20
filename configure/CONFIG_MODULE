@@ -1,0 +1,25 @@
+#
+EPICS_MODULE_NAME:=eget
+
+EPICS_MODULE_TAG:=ead31ca
+#
+E3_MODULE_VERSION:=ead31ca
+
+#
+PVDATA_DEP_VERSION:=7.0.0
+PVACCESS_DEP_VERSION:=6.0.0
+
+#E3_KMOD_SRC_PATH:=$(E3_MODULE_SRC_PATH)
+#
+# In most case, we don't need to touch the following variables.
+#
+
+E3_MODULE_NAME:=$(EPICS_MODULE_NAME)
+E3_MODULE_SRC_PATH:=eget
+E3_MODULE_MAKEFILE:=$(EPICS_MODULE_NAME).Makefile
+
+
+-include $(TOP)/configure/CONFIG_OPTIONS
+# The definitions shown below can also be placed in an untracked CONFIG_MODULE.local
+-include $(TOP)/configure/CONFIG_MODULE.local
+

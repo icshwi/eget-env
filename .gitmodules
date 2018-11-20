@@ -1,0 +1,4 @@
+[submodule "eget"]
+	path = eget
+	url = https://github.com/epics-base/eget
+	ignore = all

@@ -14,6 +14,14 @@ $ make build
 $ make install
 ```
 
+With EPICS base 7.0.1.1, please ignore `make patch` so
+
+```
+$ make init
+$ make build
+$ make install
+```
+
 
 The following executable files are in $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)/
 
